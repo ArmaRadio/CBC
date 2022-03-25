@@ -1,0 +1,24 @@
+name: Arma
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set VERSION env
+        run: echo VERSION=${GITHUB_REF:11} >> $GITHUB_ENV
+      - name: Build addon with HEMTT
+        uses: arma-actions/hemtt@master
+        with:
+          command: 'build --release'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: live_radio_cbc.zip
+          path: 'releases/live_radio_cbc.zip'

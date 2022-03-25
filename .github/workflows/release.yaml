@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set VERSION env
+        run: echo VERSION=${GITHUB_REF:11} >> $GITHUB_ENV
+      - name: Build addon with HEMTT
+        uses: arma-actions/hemtt@master
+        with:
+          command: 'build --release'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: live_radio_cbc.zip
+          path: 'releases/live_radio_cbc.zip'
+      # Upload to GitHub
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: 'releases/live_radio_cbc.zip'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Upload to Steam Workshop
+      - run: unzip releases/live_radio_cbc.zip -d ./unzipped
+      - uses: arma-actions/workshop-upload@v1
+        with:
+          itemId: '2784212229' # Id of item to update
+          contentPath: 'unzipped/@live_radio_cbc'
+          changelog: 'https://github.com/ArmaRadio/CBC/releases/tag/v${{ env.VERSION }}'
+        env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}

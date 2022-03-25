@@ -1,0 +1,9 @@
+name = "Live Radio (CBC)"
+prefix = "live_radio_cbc"
+author = "Brett Mayson"
+mainprefix = "z"
+include = ["./include"]
+files = ["mod.cpp"]
+template = "cba"
+
+releasebuild = ["@zip {{modname}}", "@zip {{key_name}}"]

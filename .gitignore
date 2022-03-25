@@ -1,0 +1,8 @@
+*.exe
+*.dll
+extension/target
+*.pbo
+releases/
+old/
+keys/
+target/
